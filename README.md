@@ -1,559 +1,113 @@
-# Phat Dat Assistant API
+# Microsoft SSO Authentication System
 
-Backend API for the Phat Dat Assistant system, built with Node.js, Express, PostgreSQL and Microsoft SSO.
+A free, open-source authentication system built with Node.js, Express, and PostgreSQL that provides Microsoft Single Sign-On (SSO) integration, user management, and domain access control for your applications.
 
-## API Endpoints
+## Features
 
-### Authentication
+- **Microsoft SSO Integration**: Seamlessly authenticate users with their Microsoft accounts
+- **Domain Restriction**: Control which email domains are allowed to access your application
+- **User Management**: Manage users, roles, and permissions
+- **Admin Dashboard**: Complete administrative interface for user and domain management
+- **API Documentation**: Comprehensive API documentation for easy integration
+- **Security**: JWT-based authentication and API key protection
 
-#### 1. Login with email/password (Admin)
+## Quick Start
 
-```
-POST /api/auth/login
-```
-
-**Headers:**
-```
-Content-Type: application/json
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Body:**
-```json
-{
-  "email": "admin@phatdatholdings.com.vn",
-  "password": "Admin@123"
-}
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "1090390625961181185",
-    "email": "admin@phatdatholdings.com.vn",
-    "first_name": "Master",
-    "last_name": "Admin",
-    "display_name": "Master Admin",
-    "role": "admin",
-    "is_admin": true,
-    "avatar_url": null
-  }
-}
-```
-
-#### 2. Initiate Microsoft Login
-
-```
-GET /api/auth/microsoft/login
-```
-
-**Headers:**
-```
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "redirectUrl": "https://login.microsoftonline.com/..."
-}
-```
-
-The frontend should redirect the user to the URL in `redirectUrl`.
-
-#### 3. Handle Microsoft Callback
-
-```
-GET /api/auth/microsoft/callback?code=xxx
-```
-
-or
-
-```
-POST /api/auth/microsoft/callback
-```
-**Body:**
-```json
-{
-  "code": "xxx"
-}
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "1090390625961181185",
-    "email": "user@phatdatholdings.com.vn",
-    "first_name": "User",
-    "last_name": "Name",
-    "display_name": "User Name",
-    "role": "user",
-    "is_admin": false,
-    "avatar_url": null
-  }
-}
-```
-
-#### 4. Get Current User Information
-
-```
-GET /api/auth/me
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "user": {
-    "id": "1090390625961181185",
-    "email": "admin@phatdatholdings.com.vn",
-    "first_name": "Master",
-    "last_name": "Admin",
-    "display_name": "Master Admin",
-    "role": "admin",
-    "is_admin": true,
-    "avatar_url": null,
-    "last_login": "2025-07-18T02:45:12.142Z"
-  }
-}
-```
-
-### Domain Management (Admin only)
-
-#### 1. Get All Domains
-
-```
-GET /api/domains
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "domains": [
-    {
-      "id": 1,
-      "domain_name": "phatdatholdings.com.vn",
-      "description": "Domain công ty Phát Đạt Holdings",
-      "is_active": true,
-      "created_at": "2025-07-18T02:45:12.142Z",
-      "updated_at": "2025-07-18T02:45:12.142Z"
-    }
-  ]
-}
-```
-
-#### 2. Get Domain by ID
-
-```
-GET /api/domains/:id
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "domain": {
-    "id": 1,
-    "domain_name": "phatdatholdings.com.vn",
-    "description": "Domain công ty Phát Đạt Holdings",
-    "is_active": true,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T02:45:12.142Z"
-  }
-}
-```
-
-#### 3. Create New Domain
-
-```
-POST /api/domains
-```
-
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Body:**
-```json
-{
-  "domain_name": "example.com",
-  "description": "Example domain",
-  "is_active": true
-}
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Domain added successfully",
-  "domain": {
-    "id": 2,
-    "domain_name": "example.com",
-    "description": "Example domain",
-    "is_active": true,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T02:45:12.142Z"
-  }
-}
-```
+### Prerequisites
 
-#### 4. Update Domain
+- Node.js 14.x or higher
+- PostgreSQL 12.x or higher
+- Microsoft Azure account with registered application
 
-```
-PUT /api/domains/:id
-```
-
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Body:**
-```json
-{
-  "domain_name": "example.com",
-  "description": "Updated description",
-  "is_active": true
-}
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Domain updated successfully",
-  "domain": {
-    "id": 2,
-    "domain_name": "example.com",
-    "description": "Updated description",
-    "is_active": true,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T03:45:12.142Z"
-  }
-}
-```
-
-#### 5. Delete Domain
-
-```
-DELETE /api/domains/:id
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Domain deleted successfully",
-  "domain": {
-    "id": 2,
-    "domain_name": "example.com",
-    "description": "Updated description",
-    "is_active": true,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T03:45:12.142Z"
-  }
-}
-```
-
-#### 6. Toggle Domain Status (Activate/Deactivate)
-
-```
-PATCH /api/domains/:id/toggle
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Domain deactivated successfully",
-  "domain": {
-    "id": 2,
-    "domain_name": "example.com",
-    "description": "Updated description",
-    "is_active": false,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T03:45:12.142Z"
-  }
-}
-```
-
-### User Management (Admin only)
-
-#### 1. Get All Users (with Pagination and Search)
-
-```
-GET /api/users
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
-
-**Query Parameters:**
-```
-page         - Số trang hiện tại (mặc định: 1)
-limit        - Số lượng kết quả mỗi trang (mặc định: 10)
-keyword      - Từ khóa tìm kiếm (tên, email, etc.)
-domain       - Tên miền email (ví dụ: phatdatholdings.com.vn)
-role         - Vai trò người dùng (admin, user, etc.)
-status       - Trạng thái (active/inactive)
-sortBy       - Sắp xếp theo trường (id, email, created_at, etc.)
-sortOrder    - Thứ tự sắp xếp (ASC/DESC)
-```
-
-**Ví dụ:**
-```
-GET /api/users?page=1&limit=10&keyword=admin&domain=phatdatholdings.com.vn&role=admin&status=active&sortBy=created_at&sortOrder=DESC
-```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "users": [
-    {
-      "id": 1,
-      "email": "admin@phatdatholdings.com.vn",
-      "first_name": "Master",
-      "last_name": "Admin",
-      "display_name": "Master Admin",
-      "role": "admin",
-      "is_admin": true,
-      "avatar_url": null,
-      "is_active": true,
-      "created_at": "2025-07-18T02:45:12.142Z",
-      "updated_at": "2025-07-18T02:45:12.142Z",
-      "last_login": "2025-07-18T02:45:12.142Z"
-    }
-  ],
-  "pagination": {
-    "total": 25,
-    "page": 1,
-    "limit": 10,
-    "totalPages": 3,
-    "hasNextPage": true,
-    "hasPrevPage": false
-  }
-}
-```
-
-#### 2. Get User by ID
-
-```
-GET /api/users/:id
-```
-
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
+### Installation
 
-**Successful Response:**
-```json
-{
-  "success": true,
-  "user": {
-    "id": 1,
-    "email": "admin@phatdatholdings.com.vn",
-    "first_name": "Master",
-    "last_name": "Admin",
-    "display_name": "Master Admin",
-    "role": "admin",
-    "is_admin": true,
-    "avatar_url": null,
-    "is_active": true,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T02:45:12.142Z",
-    "last_login": "2025-07-18T02:45:12.142Z"
-  }
-}
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/microsoft-sso-auth.git
+cd microsoft-sso-auth
 ```
-
-#### 3. Toggle User Status (Activate/Deactivate)
 
+2. Install dependencies
+```bash
+npm install
 ```
-PATCH /api/users/:id/toggle
-```
 
-**Headers:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
+3. Create a `.env` file in the root directory with the following variables:
 ```
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "User deactivated successfully",
-  "user": {
-    "id": 2,
-    "email": "user@phatdatholdings.com.vn",
-    "first_name": "User",
-    "last_name": "Name",
-    "display_name": "User Name",
-    "role": "user",
-    "is_admin": false,
-    "avatar_url": null,
-    "is_active": false,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T03:45:12.142Z",
-    "last_login": "2025-07-18T02:45:12.142Z"
-  }
-}
+DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+PORT=8080
+NODE_ENV=development
+SKIP_DOMAIN_CHECK=false
+DEBUG_AZURE=false
+API_KEY=your-api-key
+AZURE_CLIENT_ID=your-azure-client-id
+AZURE_CLIENT_SECRET=your-azure-client-secret
+AZURE_TENANT_ID=your-azure-tenant-id
+AZURE_REDIRECT_URI=http://localhost:8080/api/auth/microsoft/callback
+JWT_SECRET=your-jwt-secret
+FRONTEND_URL=http://localhost:3000
 ```
-
-#### 4. Update User Role
 
+4. Start the server
+```bash
+npm run dev
 ```
-PATCH /api/users/:id/role
-```
 
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-x-api-key: pdat-frontend-api-key-2025
-```
+## Configuration
 
-**Body:**
-```json
-{
-  "role": "admin"
-}
-```
+### Azure Application Setup
 
-**Vai trò hợp lệ:**
-- `admin` - Quản trị viên (có tất cả quyền)
-- `manager` - Quản lý (có một số quyền quản trị)
-- `staff` - Nhân viên (có quyền hạn chế)
-- `user` - Người dùng thông thường (quyền cơ bản)
-
-**Successful Response:**
-```json
-{
-  "success": true,
-  "message": "Vai trò người dùng đã được cập nhật thành admin",
-  "user": {
-    "id": 2,
-    "email": "user@phatdatholdings.com.vn",
-    "first_name": "User",
-    "last_name": "Name",
-    "display_name": "User Name",
-    "role": "admin",
-    "is_admin": true,
-    "avatar_url": null,
-    "is_active": true,
-    "created_at": "2025-07-18T02:45:12.142Z",
-    "updated_at": "2025-07-18T03:45:12.142Z",
-    "last_login": "2025-07-18T02:45:12.142Z"
-  }
-}
-```
+1. Register a new application in the Azure Portal
+2. Set the redirect URI to `http://localhost:8080/api/auth/microsoft/callback`
+3. Grant permissions for Microsoft Graph API (User.Read)
+4. Configure the application as multi-tenant
+5. Copy the Client ID and Client Secret to your `.env` file
 
-### Other APIs
+### Domain Restriction
 
-#### 1. Check API Status
+By default, the system restricts access to specific email domains. You can:
 
-```
-GET /api/status
-```
+1. Add allowed domains through the admin interface
+2. Set `SKIP_DOMAIN_CHECK=true` in development mode to bypass domain checks
+3. Manage domain status (active/inactive) through the API
 
-**Headers:**
-```
-x-api-key: pdat-frontend-api-key-2025
-```
+## Usage
 
-**Successful Response:**
-```json
-{
-  "status": "online",
-  "version": "1.0.0",
-  "timestamp": "2025-07-18T02:45:12.142Z"
-}
-```
+### Admin Account
 
-## Authentication
+The system automatically creates an admin account on first run:
+- Email: admin@phatdatholdings.com.vn
+- Password: Admin@123
 
-The system uses two authentication mechanisms:
+### API Documentation
 
-### 1. API Key (x-api-key header)
+For detailed API documentation, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
 
-Used for requests from the frontend to the API. Add the `x-api-key` header with the default value:
+## Frontend Integration
 
-```
-x-api-key: pdat-frontend-api-key-2025
-```
+To integrate with your frontend application:
 
-### 2. JWT Token (Bearer token)
+1. Configure your frontend to use the authentication endpoints
+2. Implement the Microsoft SSO login flow
+3. Handle authentication tokens and user sessions
+4. Protect routes based on user roles and permissions
 
-Used for user authentication after login. Add the `Authorization` header with the `Bearer` prefix:
+## Contributing
 
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Admin Account
+## License
 
-- **Email**: admin@phatdatholdings.com.vn
-- **Password**: Admin@123
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Allowed Domains
+## Author
 
-Only emails from the `phatdatholdings.com.vn` domain are allowed to log in to the system through Microsoft SSO.
+**Tran Minh Khoi**
+- Website: [tranminhkhoi.dev](https://tranminhkhoi.dev)
+- Email: [contact@tranminhkhoi.dev](mailto:contact@tranminhkhoi.dev)
 
-## Database
+## Support
 
-The system will automatically create tables and default data when the server starts:
+If you find this project helpful, consider supporting the development:
 
-1. **users**: Table storing user information
-2. **allowed_domains**: Table storing the list of domains allowed to log in 
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tranminhkhoi) 
