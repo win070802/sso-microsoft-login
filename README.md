@@ -110,4 +110,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 If you find this project helpful, consider supporting the development:
 
-[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tranminhkhoi) 
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/win070802) 
